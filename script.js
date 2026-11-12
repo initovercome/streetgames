@@ -1,88 +1,90 @@
 document.addEventListener('DOMContentLoaded', () => {
-    const $ = (id) => document.getElementById(id);
-    const playBtn = $('playBtn'), playModal = $('playModal');
-    const bonusBtn = $('bonusBtn'), bonusModal = $('bonusModal');
-    const copyBtn = $('copyBtn'), promoCode = $('promoCode');
-    const page = document.querySelector('.container');
-
-    let lastFocus = null;
+    const playBtn = document.getElementById('playBtn');
+    const playModal = document.getElementById('playModal');
+    const bonusBtn = document.getElementById('bonusBtn');
+    const bonusModal = document.getElementById('bonusModal');
+    const copyBtn = document.getElementById('copyBtn');
+    const promoCode = document.getElementById('promoCode');
 
     const openModal = (modal) => {
-        lastFocus = document.activeElement;
         modal.classList.add('active');
         document.body.style.overflow = 'hidden';
-        page.inert = true;
-        const first = modal.querySelector('a, button');
-        if (first) first.focus();
     };
 
     const closeModal = (modal) => {
         modal.classList.remove('active');
         document.body.style.overflow = '';
-        page.inert = false;
-        if (lastFocus) lastFocus.focus();
     };
 
     playBtn.addEventListener('click', () => openModal(playModal));
-    bonusBtn.addEventListener('click', () => openModal(bonusModal));
 
-    document.querySelectorAll('.modal').forEach((modal) => {
-        modal.querySelector('.modal-close')?.addEventListener('click', () => closeModal(modal));
-        modal.addEventListener('click', (e) => { if (e.target === modal) closeModal(modal); });
-        // Фокус не уходит за пределы модалки
-        modal.addEventListener('keydown', (e) => {
-            if (e.key !== 'Tab') return;
-            const items = modal.querySelectorAll('a[href], button');
-            const first = items[0], last = items[items.length - 1];
-            if (e.shiftKey && document.activeElement === first) { e.preventDefault(); last.focus(); }
-            else if (!e.shiftKey && document.activeElement === last) { e.preventDefault(); first.focus(); }
+    bonusBtn.addEventListener('click', () => openModal(bonusModal));
+    bonusBtn.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter' || e.key === ' ') {
+            e.preventDefault();
+            openModal(bonusModal);
+        }
+    });
+
+    document.querySelectorAll('.modal').forEach(modal => {
+        const closeBtn = modal.querySelector('.modal-close');
+        if (closeBtn) {
+            closeBtn.addEventListener('click', () => closeModal(modal));
+        }
+        modal.addEventListener('click', (e) => {
+            if (e.target === modal) closeModal(modal);
         });
     });
 
     document.addEventListener('keydown', (e) => {
         if (e.key === 'Escape') {
-            document.querySelectorAll('.modal.active').forEach(closeModal);
+            document.querySelectorAll('.modal.active').forEach(modal => closeModal(modal));
         }
     });
 
-    // Копирование промокода
     if (copyBtn && promoCode) {
         copyBtn.addEventListener('click', async () => {
             const code = promoCode.textContent.trim();
-            const showSuccess = () => {
+            try {
+                await navigator.clipboard.writeText(code);
                 copyBtn.textContent = 'Скопировано';
                 copyBtn.classList.add('copied');
                 setTimeout(() => {
                     copyBtn.textContent = 'Копировать';
                     copyBtn.classList.remove('copied');
                 }, 2000);
-            };
-            try {
-                await navigator.clipboard.writeText(code);
-                showSuccess();
-            } catch {
+            } catch (err) {
                 const range = document.createRange();
                 range.selectNode(promoCode);
-                const sel = getSelection();
-                sel.removeAllRanges();
-                sel.addRange(range);
-                try { document.execCommand('copy'); showSuccess(); } catch {}
-                sel.removeAllRanges();
+                window.getSelection().removeAllRanges();
+                window.getSelection().addRange(range);
+                try {
+                    document.execCommand('copy');
+                    copyBtn.textContent = 'Скопировано';
+                    copyBtn.classList.add('copied');
+                    setTimeout(() => {
+                        copyBtn.textContent = 'Копировать';
+                        copyBtn.classList.remove('copied');
+                    }, 2000);
+                } catch (e) {}
+                window.getSelection().removeAllRanges();
             }
         });
     }
 
-    // Видео стартуют сами (autoplay), а вне экрана ставятся на паузу
     const videos = document.querySelectorAll('video');
-    videos.forEach((v) => { v.muted = true; v.play().catch(() => {}); });
+    videos.forEach(video => {
+        video.removeAttribute('loop');
 
-    if ('IntersectionObserver' in window) {
-        const io = new IntersectionObserver((entries) => {
-            entries.forEach(({ target, isIntersecting }) => {
-                if (isIntersecting) target.play().catch(() => {});
-                else target.pause();
-            });
-        }, { threshold: 0.1 });
-        videos.forEach((v) => io.observe(v));
-    }
+        video.addEventListener('timeupdate', () => {
+            if (video.duration && video.currentTime >= video.duration - 0.25) {
+                video.currentTime = 0;
+                video.play().catch(() => {});
+            }
+        });
+
+        video.addEventListener('loadeddata', () => {
+            if (video.paused) video.play().catch(() => {});
+        });
+    });
 });

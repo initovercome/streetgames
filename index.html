@@ -9,7 +9,14 @@
     <meta property="og:description" content="Гонки без скучного RP. Уличные заезды, дрифт и тюнинг.">
     <meta property="og:type" content="website">
     <meta name="theme-color" content="#821be3">
+    <meta property="og:url" content="https://example.com/">
+    <meta property="og:image" content="https://example.com/og.jpg">
+    <meta name="twitter:card" content="summary_large_image">
+    <link rel="canonical" href="https://example.com/">
+    <link rel="icon" href="favicon.ico">
+    <link rel="preload" as="font" type="font/woff2" href="fonts/robotocondensed-black.woff2" crossorigin>
     <link rel="stylesheet" href="style.css">
+    <script src="script.js" defer></script>
 </head>
 <body>
     <div class="container">
@@ -31,9 +38,9 @@
         <div class="content-grid">
             <!-- Левая колонка: фичи -->
             <main class="features">
-                <section class="feature-block reveal">
+                <section class="feature-block">
                     <div class="feature-banner">
-                        <video class="banner-img" autoplay muted loop playsinline preload="auto">
+                        <video class="banner-img" autoplay muted loop playsinline preload="metadata" poster="video/2.webp" aria-hidden="true" tabindex="-1">
                             <source src="video/2.webm" type="video/webm">
                         </video>
                         <div class="banner-overlay"></div>
@@ -44,10 +51,10 @@
                     </p>
                 </section>
 
-                <section class="feature-block reveal">
+                <section class="feature-block">
                     <div class="feature-banner">
-                        <video class="banner-img" autoplay muted loop playsinline preload="auto">
-                            <source src="video/1.webm" type="video/webm">
+                        <video class="banner-img" autoplay muted loop playsinline preload="metadata" poster="video/1.webp" aria-hidden="true" tabindex="-1">
+                            <source src="video/1.mp4" type="video/mp4">
                         </video>
                         <div class="banner-overlay"></div>
                         <h2 class="banner-title">АКТИВНОСТИ</h2>
@@ -57,9 +64,9 @@
                     </p>
                 </section>
 
-                <section class="feature-block reveal">
+                <section class="feature-block">
                     <div class="feature-banner">
-                        <video class="banner-img" autoplay muted loop playsinline preload="auto">
+                        <video class="banner-img" autoplay muted loop playsinline preload="metadata" poster="video/3.webp" aria-hidden="true" tabindex="-1">
                             <source src="video/3.webm" type="video/webm">
                         </video>
                         <div class="banner-overlay"></div>
@@ -71,81 +78,94 @@
                 </section>
             </main>
 
-            <!-- Правая колонка: статистика -->
-            <aside class="stats-panel reveal">
-                <div class="stats-header">
-                    <h3>СТАТИСТИКА СЕРВЕРА</h3>
-                </div>
+            <!-- Правая колонка: статистика и кнопка-бонус -->
+            <aside class="sidebar-wrapper">
+                <button id="bonusBtn" class="btn-bonus-img" aria-haspopup="dialog" type="button">
+                    <span class="btn-bonus-text">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                            <path d="M20 12v10H4V12"/>
+                            <path d="M2 7h20v5H2z"/>
+                            <path d="M12 22V7"/>
+                            <path d="M12 7H7.5a2.5 2.5 0 0 1 0-5C11 2 12 7 12 7z"/>
+                            <path d="M12 7h4.5a2.5 2.5 0 0 0 0-5C13 2 12 7 12 7z"/>
+                        </svg>
+                        ПОЛУЧИ БОНУС
+                    </span>
+                </button>
 
-                <!-- Топ игроков -->
-                <div class="stats-block">
-                    <div class="stats-title">ТОП ИГРОКОВ ПО СЛАВЕ</div>
-                    <ul class="stats-list">
-                        <li>
-                            <span class="rank">1</span>
-                            <span class="name">Alimp</span>
-                            <span class="value">45.000</span>
-                        </li>
-                        <li>
-                            <span class="rank">2</span>
-                            <span class="name">Alex_Skalleto</span>
-                            <span class="value">45.000</span>
-                        </li>
-                        <li>
-                            <span class="rank">3</span>
-                            <span class="name">Sportmaster228</span>
-                            <span class="value">34.456</span>
-                        </li>
-                    </ul>
-                </div>
+                <div class="stats-panel">
+                    <div class="stats-header">
+                        <h3>СТАТИСТИКА СЕРВЕРА</h3>
+                    </div>
 
-                <!-- Самые богатые -->
-                <div class="stats-block">
-                    <div class="stats-title">САМЫЕ БОГАТЫЕ</div>
-                    <ul class="stats-list">
-                        <li>
-                            <span class="rank">1</span>
-                            <span class="name">Alimp</span>
-                            <span class="value">$48.2M</span>
-                        </li>
-                        <li>
-                            <span class="rank">2</span>
-                            <span class="name">Alex_Skalleto</span>
-                            <span class="value">$36.7M</span>
-                        </li>
-                        <li>
-                            <span class="rank">3</span>
-                            <span class="name">Sportmaster228</span>
-                            <span class="value">$29.1M</span>
-                        </li>
-                    </ul>
-                </div>
+                    <div class="stats-block">
+                        <div class="stats-title">ТОП ИГРОКОВ ПО СЛАВЕ</div>
+                        <ul class="stats-list">
+                            <li>
+                                <span class="rank">1</span>
+                                <span class="name">Alimp</span>
+                                <span class="value">45.000</span>
+                            </li>
+                            <li>
+                                <span class="rank">2</span>
+                                <span class="name">Alex_Skalleto</span>
+                                <span class="value">45.000</span>
+                            </li>
+                            <li>
+                                <span class="rank">3</span>
+                                <span class="name">Sportmaster228</span>
+                                <span class="value">34.456</span>
+                            </li>
+                        </ul>
+                    </div>
 
-                <!-- Топ зон -->
-                <div class="stats-block">
-                    <div class="stats-title">БОЛЬШЕ ВСЕГО ЗОН ЗАХВАЧЕНО</div>
-                    <ul class="stats-list zones">
-                        <li>
-                            <span class="zone-name">Team Skala</span>
-                            <span class="zone-bar"><i style="width: 92%"></i></span>
-                            <span class="zone-val">10</span>
-                        </li>
-                        <li>
-                            <span class="zone-name">RHS</span>
-                            <span class="zone-bar"><i style="width: 78%"></i></span>
-                            <span class="zone-val">4</span>
-                        </li>
-                        <li>
-                            <span class="zone-name">Top Secret</span>
-                            <span class="zone-bar"><i style="width: 65%"></i></span>
-                            <span class="zone-val">1</span>
-                        </li>
-                    </ul>
-                </div>            
+                    <div class="stats-block">
+                        <div class="stats-title">САМЫЕ БОГАТЫЕ</div>
+                        <ul class="stats-list">
+                            <li>
+                                <span class="rank">1</span>
+                                <span class="name">Alimp</span>
+                                <span class="value">$48.2M</span>
+                            </li>
+                            <li>
+                                <span class="rank">2</span>
+                                <span class="name">Alex_Skalleto</span>
+                                <span class="value">$36.7M</span>
+                            </li>
+                            <li>
+                                <span class="rank">3</span>
+                                <span class="name">Sportmaster228</span>
+                                <span class="value">$29.1M</span>
+                            </li>
+                        </ul>
+                    </div>
+
+                    <div class="stats-block">
+                        <div class="stats-title">БОЛЬШЕ ВСЕГО ЗОН ЗАХВАЧЕНО</div>
+                        <ul class="stats-list zones">
+                            <li>
+                                <span class="zone-name">Team Skala</span>
+                                <span class="zone-bar"><i style="width: 92%"></i></span>
+                                <span class="zone-val">10</span>
+                            </li>
+                            <li>
+                                <span class="zone-name">RHS</span>
+                                <span class="zone-bar"><i style="width: 78%"></i></span>
+                                <span class="zone-val">4</span>
+                            </li>
+                            <li>
+                                <span class="zone-name">Top Secret</span>
+                                <span class="zone-bar"><i style="width: 65%"></i></span>
+                                <span class="zone-val">1</span>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </aside>
         </div>
     </div>
 
-    <!-- Модалка -->
+    <!-- Модалка ИГРАТЬ -->
     <div id="playModal" class="modal" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
         <div class="modal-content">
             <button class="modal-close" aria-label="Закрыть">&times;</button>
@@ -178,6 +198,48 @@
         </div>
     </div>
 
-    <script src="script.js"></script>
+    <!-- Модалка БОНУС -->
+    <div id="bonusModal" class="modal" role="dialog" aria-modal="true" aria-labelledby="bonusTitle">
+        <div class="modal-content bonus-modal-content">
+            <button class="modal-close" aria-label="Закрыть">&times;</button>
+            <h3 id="bonusTitle">ПОЛУЧИ БОНУС</h3>
+            <p class="bonus-intro">Скопируйте промокод и введите его на сервере</p>
+
+            <div class="promo-code-box">
+                <span class="promo-code" id="promoCode">STREETBONUS</span>
+                <button class="copy-btn" id="copyBtn" type="button">Копировать</button>
+            </div>
+
+            <p class="bonus-hint">После входа на сервер откройте чат и введите промокод. Бонус начислится автоматически.</p>
+        </div>
+    </div>
+
+    
+    <!-- SVG-фильтры: рваная маска -->
+    <svg width="0" height="0" style="position:absolute;pointer-events:none;overflow:hidden;" aria-hidden="true">
+        <defs>
+            <filter id="rough" x="-12%" y="-12%" width="124%" height="124%" filterUnits="objectBoundingBox" color-interpolation-filters="sRGB">
+                <feTurbulence type="fractalNoise" baseFrequency="0.045" numOctaves="4" seed="4" result="noise"/>
+                <feGaussianBlur in="SourceAlpha" stdDeviation="1.2" result="blur"/>
+                <feDisplacementMap in="blur" in2="noise" scale="14" xChannelSelector="R" yChannelSelector="G" result="disp"/>
+                <feComponentTransfer in="disp" result="hard">
+                    <feFuncA type="discrete" tableValues="0 1"/>
+                </feComponentTransfer>
+                <feComposite in="SourceGraphic" in2="hard" operator="in" result="masked"/>
+                <feGaussianBlur in="masked" stdDeviation="0.4" result="soft"/>
+                <feComposite in="masked" in2="soft" operator="atop"/>
+            </filter>
+
+            <filter id="rough-bar" x="-10%" y="-60%" width="120%" height="220%" filterUnits="objectBoundingBox" color-interpolation-filters="sRGB">
+                <feTurbulence type="fractalNoise" baseFrequency="0.08" numOctaves="3" seed="2" result="noise"/>
+                <feGaussianBlur in="SourceAlpha" stdDeviation="0.6" result="blur"/>
+                <feDisplacementMap in="blur" in2="noise" scale="6" xChannelSelector="R" yChannelSelector="G" result="disp"/>
+                <feComponentTransfer in="disp" result="hard">
+                    <feFuncA type="discrete" tableValues="0 1"/>
+                </feComponentTransfer>
+                <feComposite in="SourceGraphic" in2="hard" operator="in"/>
+            </filter>
+        </defs>
+    </svg>
 </body>
 </html>

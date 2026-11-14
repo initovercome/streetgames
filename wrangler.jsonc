@@ -8,7 +8,7 @@
 		"binding": "ASSETS"
 	},
 	"kv_namespaces": [
-		// id — из Cloudflare: Storage & Databases → KV → Create (имя любое, например streetgames-stats)
-		{ "binding": "STATS", "id": "ВСТАВИТЬ_ID_KV" }
+		// хранилище «sg» в Cloudflare: Storage & Databases → Workers KV
+		{ "binding": "STATS", "id": "eb9783d16be940c68f39006e28d4df31" }
 	]
 }

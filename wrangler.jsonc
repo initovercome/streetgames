@@ -1,0 +1,14 @@
+{
+	// Worker + статика сайта. Имя должно совпадать с Worker'ом в Cloudflare (streetgames).
+	"name": "streetgames",
+	"main": "worker/index.js",
+	"compatibility_date": "2025-06-01",
+	"assets": {
+		"directory": ".",
+		"binding": "ASSETS"
+	},
+	"kv_namespaces": [
+		// id — из Cloudflare: Storage & Databases → KV → Create (имя любое, например streetgames-stats)
+		{ "binding": "STATS", "id": "ВСТАВИТЬ_ID_KV" }
+	]
+}

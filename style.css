@@ -247,3 +247,56 @@ body {
 @media (prefers-reduced-motion: reduce) {
     * { transition: none !important; }
 }
+
+/* --- ЖИВАЯ СТАТИСТИКА (данные с игрового сервера, /api/stats) --- */
+.online-line {
+    display: flex; align-items: center; gap: 8px;
+    margin: -18px 0 30px; font-size: 1rem; color: var(--text-muted); letter-spacing: 1px;
+}
+.online-line b { color: #fff; font-weight: 900; }
+.online-dot { width: 8px; height: 8px; background: #22c55e; box-shadow: 0 0 8px rgba(34,197,94,.7); }
+
+.stats-updated { font-size: .75rem; color: var(--text-label); margin-top: 2px; }
+.stats-list li.stats-empty { color: var(--text-label); font-size: .85rem; }
+
+.records { margin-top: 40px; padding: 26px 28px 18px; }
+.records-head {
+    display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap;
+    gap: 14px 24px; margin-bottom: 22px;
+}
+.records-title { font-size: 1.6rem; font-weight: 900; letter-spacing: 1.5px; color: #fff; line-height: 1; }
+.records-controls { display: flex; flex-wrap: wrap; gap: 10px; }
+
+.seg { display: flex; flex-wrap: wrap; gap: 2px; }
+.seg button {
+    background: #121212; color: var(--text-muted); border: none; cursor: pointer;
+    font-family: inherit; font-size: .8rem; font-weight: 900; letter-spacing: 1px;
+    padding: 7px 12px; min-width: 38px; transition: background-color .15s ease, color .15s ease;
+}
+.seg button:hover { color: #fff; background: #1e1e1e; }
+.seg button[aria-pressed="true"] { background: var(--accent); color: #fff; }
+
+.records-grid { display: grid; grid-template-columns: 1fr 320px; gap: 32px; align-items: start; }
+
+.rec-list { list-style: none; }
+.rec-list li {
+    display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 0 14px;
+    padding: 8px 0; border-bottom: 1px solid rgba(255,255,255,.04);
+}
+.rec-list li:last-child { border-bottom: none; }
+.rec-place { font-weight: 900; color: #fff; font-size: .95rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.rec-place small { color: var(--text-label); font-weight: 200; font-size: .8rem; margin-left: 6px; }
+.rec-score { font-weight: 900; color: var(--promo-yellow); font-size: .95rem; text-align: right; white-space: nowrap; }
+.rec-who { color: var(--text-muted); font-size: .85rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.rec-who b { color: #fff; font-weight: 900; }
+.rec-car { color: var(--text-label); font-size: .8rem; text-align: right; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 170px; }
+.rec-list li.rec-free .rec-score, .rec-list li.rec-free .rec-who { color: var(--text-label); font-weight: 200; }
+
+@media (max-width: 980px) {
+    .records-grid { grid-template-columns: 1fr; gap: 28px; }
+}
+@media (max-width: 640px) {
+    .records { padding: 22px 18px 14px; }
+    .records-title { font-size: 1.35rem; }
+    .rec-car { max-width: 120px; }
+}

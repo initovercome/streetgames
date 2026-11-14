@@ -3,11 +3,11 @@
 //                     Нужен заголовок Authorization: Bearer <SYNC_KEY>.
 //   GET  /api/stats — сайт забирает статистику. Ответ кэшируется на минуту,
 //                     так что посетители не дёргают ни KV, ни игровой сервер.
+//                     Онлайн на сайте не показываем — из ответа он убирается.
 // Всё остальное — статика сайта (env.ASSETS).
 //
 // Нужно в Cloudflare: KV-хранилище с привязкой STATS и секрет SYNC_KEY (см. SYNC.md).
 
-const CFX_URL = 'https://frontend.cfx-services.net/api/servers/single/9vzkrm';
 const STATS_KEY = 'stats';
 const CACHE_SEC = 60;
 const MAX_BODY = 256 * 1024;
@@ -48,23 +48,6 @@ async function handlePush(request, env) {
 	return json({ ok: true });
 }
 
-// Онлайн из списка серверов FiveM: игровой сервер не трогаем
-async function fetchOnline() {
-	try {
-		const r = await fetch(CFX_URL, {
-			headers: { 'User-Agent': 'streetgames-site', Accept: 'application/json' },
-			cf: { cacheTtl: CACHE_SEC, cacheEverything: true },
-			signal: AbortSignal.timeout(4000),
-		});
-		if (!r.ok) return null;
-		const d = (await r.json()).Data;
-		if (!d || typeof d.clients !== 'number') return null;
-		return { online: d.clients, maxPlayers: d.sv_maxclients || d.svMaxclients || null };
-	} catch {
-		return null;
-	}
-}
-
 async function handleStats(request, env, ctx) {
 	if (request.method !== 'GET' && request.method !== 'HEAD') return json({ error: 'method' }, 405);
 
@@ -73,24 +56,15 @@ async function handleStats(request, env, ctx) {
 	const hit = await cache.match(cacheKey);
 	if (hit) return hit;
 
-	const [raw, live] = await Promise.all([
-		// cacheTtl — KV держит значение на краю минуту (Cache API на *.workers.dev не работает,
-		// так что на своём домене кэш ниже срежет запросы ещё сильнее)
-		env.STATS ? env.STATS.get(STATS_KEY, { cacheTtl: CACHE_SEC }) : null,
-		fetchOnline(),
-	]);
+	// cacheTtl — KV держит значение на краю минуту (Cache API на *.workers.dev не работает,
+	// так что на своём домене кэш ниже срежет запросы ещё сильнее)
+	const raw = env.STATS ? await env.STATS.get(STATS_KEY, { cacheTtl: CACHE_SEC }) : null;
 
 	let data = null;
 	try { data = raw ? JSON.parse(raw) : null; } catch { data = null; }
 	data = data || { v: 1, empty: true };
-
-	if (live) {
-		data.online = live.online;
-		if (live.maxPlayers) data.maxPlayers = live.maxPlayers;
-		data.onlineLive = true;
-	} else {
-		data.onlineLive = false;   // онлайн из последней отправки сервера (может отставать)
-	}
+	delete data.online;
+	delete data.maxPlayers;
 
 	const resp = json(data, 200, { 'Cache-Control': `public, max-age=${CACHE_SEC}` });
 	ctx.waitUntil(cache.put(cacheKey, resp.clone()));

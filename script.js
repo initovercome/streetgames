@@ -173,7 +173,7 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
 // ---------- Живая статистика с игрового сервера (/api/stats, Worker) ----------
-// Сервер сам присылает данные раз в ~10 минут, онлайн — из списка серверов FiveM.
+// Сервер сам присылает данные раз в ~10 минут.
 document.addEventListener('DOMContentLoaded', () => {
     const $ = (id) => document.getElementById(id);
     const CLASSES = ['E', 'D', 'C', 'B', 'A', 'S1', 'S2'];
@@ -310,11 +310,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
     const render = (d) => {
         data = d;
-        if (typeof d.online === 'number') {
-            $('onlineNow').textContent = d.online;
-            $('onlineMax').textContent = d.maxPlayers ? ' / ' + d.maxPlayers : '';
-            $('onlineLine').hidden = false;
-        }
         if (d.empty) {
             [fameList, richList, zonesList].forEach((ul) => emptyRow(ul, 'Данные скоро появятся'));
             return;
